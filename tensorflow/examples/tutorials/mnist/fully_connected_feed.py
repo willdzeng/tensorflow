@@ -116,7 +116,7 @@ def run_training():
   """Train MNIST for a number of steps."""
   # Get the sets of images and labels for training, validation, and
   # test on MNIST.
-  data_sets = input_data.read_data_sets(FLAGS.data_dir, FLAGS.fake_data)
+  data_sets = input_data.read_data_sets(FLAGS.input_data_dir, FLAGS.fake_data)
 
   # Tell TensorFlow that the model will be built into the default Graph.
   with tf.Graph().as_default():
@@ -151,7 +151,7 @@ def run_training():
     sess = tf.Session()
 
     # Instantiate a SummaryWriter to output summaries and the Graph.
-    summary_writer = tf.train.SummaryWriter(FLAGS.data_dir, sess.graph)
+    summary_writer = tf.train.SummaryWriter(FLAGS.log_dir, sess.graph)
 
     # And then after everything is built:
 
@@ -189,7 +189,7 @@ def run_training():
 
       # Save a checkpoint and evaluate the model periodically.
       if (step + 1) % 1000 == 0 or (step + 1) == FLAGS.max_steps:
-        checkpoint_file = os.path.join(FLAGS.data_dir, 'checkpoint')
+        checkpoint_file = os.path.join(FLAGS.log_dir, 'checkpoint')
         saver.save(sess, checkpoint_file, global_step=step)
         # Evaluate against the training set.
         print('Training Data Eval:')
@@ -251,10 +251,16 @@ if __name__ == '__main__':
       help='Batch size.  Must divide evenly into the dataset sizes.'
   )
   parser.add_argument(
-      '--data_dir',
+      '--input_data_dir',
       type=str,
-      default='/tmp/data',
-      help='Directory to put the training data.'
+      default='/tmp/tensorflow/mnist/input_data',
+      help='Directory to put the input data.'
+  )
+  parser.add_argument(
+      '--log_dir',
+      type=str,
+      default='/tmp/tensorflow/mnist/logs/fully_connected_feed',
+      help='Directory to put the log data.'
   )
   parser.add_argument(
       '--fake_data',
